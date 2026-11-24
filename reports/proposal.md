@@ -84,4 +84,4 @@ on the live feed on 24 Nov (details: `reports/validation_report.pdf`):
 | Source code with README | <https://github.com/satyandra7/HackathonDTC> |
 | Technical note | `reports/technical_note.pdf` |
 | Validation report | `reports/validation_report.pdf` (data in `reports/results/`) |
-| Demo video | [[TBD: link]] |
+| Demo video | uploaded with the submission |

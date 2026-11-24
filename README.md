@@ -17,7 +17,7 @@ options between two points.
 | 2. Working prototype | journey planner website + API + live worker: see [Running the planner](#running-the-planner) |
 | 3. Source code and setup | this repository and README |
 | 4. Technical note | [`reports/technical_note.pdf`](reports/technical_note.pdf) (validation: [`reports/validation_report.pdf`](reports/validation_report.pdf)) |
-| 5. Demo video | [[TBD: link]] |
+| 5. Demo video | uploaded with the submission (2 min 14 s, the planner running end to end) |
 
 - **Proposal:** [`reports/proposal.pdf`](reports/proposal.pdf) · **Technical note:**
   [`reports/technical_note.pdf`](reports/technical_note.pdf) · **Validation report:**
