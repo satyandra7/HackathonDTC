@@ -2,6 +2,8 @@
 
 **Transport Stack Hackathon 2026 (Delhi), Problem 1:** a real-time bus traffic model and journey planner.
 
+**Team THE HEURISTIC LARPERS:** Satyandra Pal (team lead), Anoushka Malik.
+
 Delhi's buses report their GPS position every few seconds. This project uses that fleet as a set of moving
 traffic sensors: it cleans a month of historical positions, matches each bus run to its scheduled trip in the
 official DTC GTFS, turns the GPS track into stop-passing times, and learns how long every stop-to-stop segment

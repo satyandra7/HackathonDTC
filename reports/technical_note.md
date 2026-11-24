@@ -1,6 +1,6 @@
 # Technical note: bus travel times from the DTC fleet
 
-**Team THE HEURISTIC LARPERS** · Transport Stack Hackathon 2026 · Problem 1: real-time bus traffic model and
+**Team THE HEURISTIC LARPERS** (Satyandra Pal, Anoushka Malik) · Transport Stack Hackathon 2026 · Problem 1: real-time bus traffic model and
 journey planner · Code: <https://github.com/satyandra7/HackathonDTC>
 
 > 24 Nov 2026. All data come from the authority: the October 2026 bus GPS archive, the official DTC static GTFS

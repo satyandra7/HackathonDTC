@@ -1,6 +1,6 @@
 # Proposal: the DTC fleet as a traffic sensor
 
-**Team THE HEURISTIC LARPERS** (Satyandra Pal, [[TBD: other members]]) · Transport Stack Hackathon 2026 ·
+**Team THE HEURISTIC LARPERS** (Satyandra Pal, team lead; Anoushka Malik) · Transport Stack Hackathon 2026 ·
 Problem 1: real-time bus traffic model and journey planner · Code: <https://github.com/satyandra7/HackathonDTC>
 
 ## The problem

@@ -1,6 +1,6 @@
 # Validation report: bus travel-time estimates
 
-**Team THE HEURISTIC LARPERS** · Transport Stack Hackathon 2026 · Problem 1 · 24 Nov 2026
+**Team THE HEURISTIC LARPERS** (Satyandra Pal, Anoushka Malik) · Transport Stack Hackathon 2026 · Problem 1 · 24 Nov 2026
 
 > **Summary.** On 1,500 real bus rides from held-out days, our estimates are off by **4.5 min (13.8%)** with live
 > data and 5.8 min (16.5%) from history alone. The official timetable is off by 9.0 min (30%) and **Google Maps by
