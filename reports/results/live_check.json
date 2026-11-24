@@ -1,0 +1,50 @@
+{
+  "day": "2026-11-24",
+  "rides": 1500,
+  "first_live_position_ist": "18:29",
+  "boarding_from_ist": "18:54",
+  "boarding_to_ist": "19:24",
+  "median_stops": 5.0,
+  "median_observed_min": 11.2,
+  "methods": {
+    "live": {
+      "n": 1500,
+      "MAE_min": 2.0,
+      "MAPE_pct": 19.5,
+      "P50_min": 1.23,
+      "within_5min_pct": 92.9,
+      "within_10pct_pct": 45.5,
+      "bias_min": 0.32
+    },
+    "model": {
+      "n": 1500,
+      "MAE_min": 2.99,
+      "MAPE_pct": 28.8,
+      "P50_min": 1.78,
+      "within_5min_pct": 83.9,
+      "within_10pct_pct": 32.2,
+      "bias_min": 1.69
+    },
+    "timetable": {
+      "n": 1500,
+      "MAE_min": 3.44,
+      "MAPE_pct": 28.6,
+      "P50_min": 2.49,
+      "within_5min_pct": 75.8,
+      "within_10pct_pct": 21.9,
+      "bias_min": -1.94
+    }
+  },
+  "by_half_hour": {
+    "18:30": {
+      "n": 474,
+      "model_MAE": 3.84,
+      "live_MAE": 2.6
+    },
+    "19:00": {
+      "n": 1026,
+      "model_MAE": 2.6,
+      "live_MAE": 1.72
+    }
+  }
+}

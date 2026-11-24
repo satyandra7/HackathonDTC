@@ -1,0 +1,58 @@
+{
+  "fetched_ist": "2026-11-24T18:29:24+05:30",
+  "snapshots": [
+    {
+      "bytes": 601615,
+      "seconds": 0.48,
+      "entities": 5495,
+      "header_age_s": 24.0
+    },
+    {
+      "bytes": 601287,
+      "seconds": 0.36,
+      "entities": 5492,
+      "header_age_s": 7.5
+    },
+    {
+      "bytes": 601287,
+      "seconds": 0.35,
+      "entities": 5492,
+      "header_age_s": 27.9
+    }
+  ],
+  "fields_filled": {
+    "vehicle.id": 5492,
+    "vehicle.label": 5492,
+    "trip.trip_id": 5492,
+    "trip.route_id": 5492,
+    "trip.direction_id": 0,
+    "trip.start_time": 5492,
+    "trip.start_date": 5492,
+    "position": 5492,
+    "position.speed": 5492,
+    "position.bearing": 0,
+    "timestamp": 5492,
+    "stop_id": 0,
+    "current_stop_sequence": 0,
+    "current_status": 0,
+    "congestion_level": 0,
+    "occupancy_status": 0
+  },
+  "vehicles": 5492,
+  "routes_in_feed": 1377,
+  "feed_routes_in_static_gtfs": 1345,
+  "trip_id_prefix_equals_route_id": 1.0,
+  "position_age_s": {
+    "median": 40.9,
+    "p90": 151.9,
+    "share_older_than_5min": 0.013
+  },
+  "vehicles_with_new_timestamp_between_first_and_last": 4130,
+  "vehicles_in_both": 5492,
+  "seconds_between_first_and_last": 40.8,
+  "sample_trip_ids": [
+    "3601_16_56_5616",
+    "2875_18_11_7896",
+    "1995_18_04_2954"
+  ]
+}

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delhi Bus Planner</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  :root { --bg:#f7f7f5; --panel:#fff; --ink:#1d1d1b; --muted:#6b6b66; --line:#e3e2dd; --accent:#1f6feb; --warn:#b54708; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#151514; --panel:#1f1f1d; --ink:#ecebe6; --muted:#a3a29b; --line:#34332f; --accent:#4c8dff; --warn:#f0a04b; } }
+  * { box-sizing:border-box; }
+  body { margin:0; font:14px/1.4 system-ui, -apple-system, Segoe UI, sans-serif; background:var(--bg); color:var(--ink);
+         display:grid; grid-template-columns:380px 1fr; height:100vh; }
+  aside { background:var(--panel); border-right:1px solid var(--line); overflow:auto; padding:16px; }
+  #map { height:100vh; }
+  h1 { font-size:17px; margin:0 0 4px; }
+  .sub { color:var(--muted); font-size:12px; margin-bottom:14px; }
+  label { display:block; font-size:12px; color:var(--muted); margin:10px 0 3px; }
+  input { width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--ink); font:inherit; }
+  button { margin-top:12px; width:100%; padding:9px; border:0; border-radius:8px; background:var(--accent); color:#fff; font:inherit; font-weight:600; cursor:pointer; }
+  .hint { font-size:12px; color:var(--muted); margin-top:6px; }
+  .opt { border:1px solid var(--line); border-radius:10px; padding:12px; margin-top:12px; cursor:pointer; }
+  .opt.sel { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
+  .big { font-size:20px; font-weight:700; }
+  .row { display:flex; justify-content:space-between; gap:8px; align-items:baseline; }
+  .muted { color:var(--muted); font-size:12px; }
+  .delay { color:var(--warn); font-size:12px; }
+  .leg { margin-top:6px; font-size:13px; padding-left:10px; border-left:3px solid var(--line); }
+  .bus { border-left-color:var(--accent); }
+  .err { color:var(--warn); margin-top:10px; }
+  @media (max-width:760px) { body { grid-template-columns:1fr; grid-template-rows:auto 55vh; height:auto; } #map { height:55vh; } aside { border-right:0; } }
+</style>
+</head>
+<body>
+<aside>
+  <h1>Delhi bus journey planner</h1>
+  <div class="sub">Travel times learned from DTC bus GPS (Oct 2026), by hour and day type.</div>
+  <label for="from">From (stop name or lat,lon)</label>
+  <input id="from" value="Kashmere Gate ISBT" list="stoplist">
+  <label for="to">To</label>
+  <input id="to" value="Nehru Place" list="stoplist">
+  <datalist id="stoplist"></datalist>
+  <label for="depart">Departure</label>
+  <input id="depart" type="datetime-local">
+  <button id="go">Find journeys</button>
+  <div class="hint">Tip: click the map to set the origin, then click again to set the destination.</div>
+  <div id="out"></div>
+</aside>
+<div id="map"></div>
+<script>
+const map = L.map('map').setView([28.62, 77.21], 11);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 19, attribution: '&copy; OpenStreetMap contributors'}).addTo(map);
+const layer = L.layerGroup().addTo(map);
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, '0');
+(() => { const d = new Date();   // default: now (live data applies to today)
+  $('depart').value = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`; })();
+let clickTurn = 0;
+map.on('click', e => { const v = `${e.latlng.lat.toFixed(5)},${e.latlng.lng.toFixed(5)}`;
+  $(clickTurn++ % 2 ? 'to' : 'from').value = v; });
+let timer;
+['from', 'to'].forEach(id => $(id).addEventListener('input', e => { clearTimeout(timer); const q = e.target.value;
+  if (q.length < 3 || /^-?\d/.test(q)) return;
+  timer = setTimeout(async () => { try { const r = await fetch(`stops/search?q=${encodeURIComponent(q)}&limit=8`);
+    const hits = await r.json(); $('stoplist').innerHTML = hits.map(h => `<option value="${h.name}">`).join(''); } catch {} }, 250); }));
+let options = [];
+function draw(i) {
+  layer.clearLayers();
+  document.querySelectorAll('.opt').forEach((el, j) => el.classList.toggle('sel', i === j));
+  const o = options[i]; if (!o) return;
+  const all = [];
+  o.legs.forEach(l => { all.push(...l.path);
+    L.polyline(l.path, l.mode === 'bus' ? {color: l.color || '#1f6feb', weight: 5} : {color: '#777', weight: 3, dashArray: '4 6'})
+      .bindTooltip(l.mode === 'bus' ? `Bus ${l.route}: ${l.board} → ${l.alight}` : `Walk ${l.minutes} min`).addTo(layer);
+    if (l.mode === 'bus') (l.stop_points || l.path).forEach(p => L.circleMarker(p, {radius: 3, color: l.color || '#1f6feb'}).addTo(layer)); });
+  if (all.length) map.fitBounds(all, {padding: [30, 30]});
+}
+function legHtml(l) {
+  if (l.mode === 'walk') return `<div class="leg">🚶 Walk ${l.minutes} min (${l.meters} m) to ${l.to}</div>`;
+  return `<div class="leg bus">🚌 <b>${l.route}</b>${l.headsign ? ' towards ' + l.headsign : ''}<br>
+    ${l.departs} ${l.board} → ${l.arrives} ${l.alight}<br>
+    <span class="muted">${l.stops} stops · wait ${l.wait_min} min · ride ${l.ride_min} min${l.live_ride_min != null ? ' (live ' + l.live_ride_min + ')' : ''} (timetable ${l.timetable_ride_min}, plan for ${l.ride_p85_min})</span></div>`;
+}
+$('go').onclick = async () => {
+  const dep = $('depart').value ? $('depart').value + '+05:30' : '';
+  $('out').innerHTML = '<div class="muted" style="margin-top:12px">Searching…</div>';
+  try {
+    const r = await fetch(`journeys?from=${encodeURIComponent($('from').value)}&to=${encodeURIComponent($('to').value)}&depart=${encodeURIComponent(dep)}`);
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.detail || r.statusText);
+    options = j.options;
+    const notes = (j.notes || []).map(n => `<div class="muted" style="margin-top:8px">${n}</div>`).join('');
+    if (!options.length) { $('out').innerHTML = `<div class="err">No bus journey found.</div>${notes}`; layer.clearLayers(); return; }
+    $('out').innerHTML = options.map((o, i) => `<div class="opt" data-i="${i}">
+      <div class="row"><span class="big">${o.total_minutes} min</span><span>arrive ${o.arrival}</span></div>
+      <div class="row muted"><span>${o.transfers} transfer${o.transfers === 1 ? '' : 's'} · walk ${o.walk_minutes} · wait ${o.wait_minutes}</span><span>confidence ${o.confidence}</span></div>
+      ${o.live_total_minutes != null ? `<div class="delay">With live data (${o.source.includes('GTFS-RT') ? 'live feed, ' : 'replay of '}${o.source.split(' of ')[1]}): <b>${o.live_total_minutes} min</b></div>` : ''}
+      <div class="delay">${o.traffic_delay_minutes > 0 ? `+${o.traffic_delay_minutes} min traffic vs ${o.offpeak_minutes} min at a quiet hour` : `about ${o.offpeak_minutes} min at a quiet hour`} · plan for ${o.plan_for_minutes} min</div>
+      ${o.legs.map(legHtml).join('')}</div>`).join('') + notes + `<div class="muted" style="margin-top:10px">${j.compute_ms} ms</div>`;
+    document.querySelectorAll('.opt').forEach(el => el.onclick = () => draw(+el.dataset.i));
+    draw(0);
+  } catch (e) { $('out').innerHTML = `<div class="err">${e.message}</div>`; }
+};
+</script>
+</body>
+</html>

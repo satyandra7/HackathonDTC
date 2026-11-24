@@ -1,0 +1,43 @@
+# All datasets live under data/ (raw ~115 GB) – never commit
+data/
+delhi-dtc-bus-gtfs-rt-2026-10*/
+*.7z
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+
+# Derived data
+*.parquet
+
+# Python / env
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+# OS
+.DS_Store
+
+# LaTeX build files (the PDF is committed)
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.crdownload
+
+# Problem statement PDF – kept local only
+docs/problem-statement.pdf
+data_exp/
+
+# Phase 2 data root (large, rebuilt from data/)
+phase2/data/
+
+# Internal notes and tools, kept locally only
+_internal/
+reports/results/gmaps_manual*.csv
+demo/
